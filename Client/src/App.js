@@ -1,4 +1,4 @@
-import "./App.cssAAAAA";
+import "./App.css";
 import Nav from "./components/Nav";
 import Cards from "./components/carpetaCards/Cards.jsx";
 import { useState, useEffect } from "react";
