@@ -1,0 +1,10 @@
+.App {
+   text-align: center;
+}
+body{
+   background-image: url("./263f8a2cbfc9d6e90f37e32f88d3265d.gif");
+   background-size: cover;
+   background-repeat: no-repeat;
+   height: 100vh;
+   background-attachment: fixed;
+      }
