@@ -13,19 +13,23 @@ function App() {
   let [characters, setCharacters] = useState([]);
   const navigate = useNavigate();
 
-  function onSearch(id) {
-    axios(`http://localhost:3001/rickandmorty/character/${id}`).then(
-      ({ data }) => {
-        const char = characters?.find((e) => e.id === Number(data.id));
-        if (char) {
-          alert("Already in the list");
-        } else if (data.id !== undefined) {
-          setCharacters((characters) => [...characters, data]);
-        } else {
-          alert("Character not found");
-        }
+  async function onSearch(id) {
+    try {
+      const url = "http://localhost:3001/rickandmorty/character/" + id;
+
+      const { data } = await axios(url);
+      const char = characters?.find((e) => e.id === Number(data.id));
+
+      if (char) {
+        alert("Already in the list");
+      } else if (data.id !== undefined) {
+        setCharacters((characters) => [...characters, data]);
+      } else {
+        alert("Character not found");
       }
-    );
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   const onClose = (id) => {
@@ -38,12 +42,19 @@ function App() {
   const EMAIL = "pedroloria003@gmail.com";
   const PASSWORD = "pedro123";
 
-  const login = (userData) => {
-    if (userData.password === PASSWORD && userData.email === EMAIL) {
-      setAccess(true);
-      navigate("/home");
+  async function login(userData) {
+    try {
+      const { email, password } = userData;
+      const URL = "http://localhost:3001/rickandmorty/login/";
+      const QUERY = `?email=${email}&password=${password}`;
+      const { data } = await axios(URL + QUERY);
+      const { access } = data;
+      setAccess(data);
+      access && navigate("/home");
+    } catch (error) {
+      return { error: error.message };
     }
-  };
+  }
 
   useEffect(() => {
     !access && navigate("/");
