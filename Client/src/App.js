@@ -3,7 +3,7 @@ import Nav from "./components/Nav";
 import Cards from "./components/carpetaCards/Cards.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import About from "./components/About";
 import Detail from "./components/Detail";
 import Form from "./components/Form/Form";
@@ -12,6 +12,7 @@ import Favorites from "./components/Favorites/Favorites";
 function App() {
   let [characters, setCharacters] = useState([]);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   async function onSearch(id) {
     try {
@@ -42,19 +43,12 @@ function App() {
   const EMAIL = "pedroloria003@gmail.com";
   const PASSWORD = "pedro123";
 
-  async function login(userData) {
-    try {
-      const { email, password } = userData;
-      const URL = "http://localhost:3001/rickandmorty/login/";
-      const QUERY = `?email=${email}&password=${password}`;
-      const { data } = await axios(URL + QUERY);
-      const { access } = data;
-      setAccess(data);
-      access && navigate("/home");
-    } catch (error) {
-      return { error: error.message };
+  const login = (userData) => {
+    if (userData.password === PASSWORD && userData.email === EMAIL) {
+      setAccess(true);
+      navigate("/home");
     }
-  }
+  };
 
   useEffect(() => {
     !access && navigate("/");
@@ -62,7 +56,7 @@ function App() {
 
   return (
     <div className="App">
-      <Nav onSearch={onSearch} />
+      {pathname !== "/" && <Nav onSearch={onSearch} setAccess={setAccess} />}
       <Routes>
         <Route path="/" element={<Form login={login} />} />
         <Route
